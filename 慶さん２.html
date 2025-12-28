@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>分割返済シミュレーター</title>
+
+<style>
+  body {
+    background:#0b0b0b;
+    color:#fff;
+    font-family: "Segoe UI", sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+  }
+
+  .card {
+    background:#151515;
+    width:340px;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 0 20px rgba(0,0,0,0.6);
+  }
+
+  h1 {
+    font-size:20px;
+    text-align:center;
+    margin-bottom:20px;
+  }
+
+  label {
+    font-size:14px;
+    opacity:0.8;
+  }
+
+  input, select {
+    width:100%;
+    margin-top:6px;
+    margin-bottom:16px;
+    padding:10px;
+    font-size:16px;
+    border:none;
+    border-radius:6px;
+    background:#222;
+    color:#fff;
+  }
+
+  button {
+    width:100%;
+    padding:12px;
+    font-size:16px;
+    border:none;
+    border-radius:8px;
+    background:#00bcd4;
+    color:#000;
+    font-weight:bold;
+    cursor:pointer;
+  }
+
+  button:hover {
+    opacity:0.9;
+  }
+
+  .result {
+    margin-top:20px;
+    background:#1e1e1e;
+    padding:15px;
+    border-radius:8px;
+    font-size:15px;
+    line-height:1.7;
+  }
+
+  .note {
+    margin-top:10px;
+    font-size:12px;
+    opacity:0.6;
+  }
+</style>
+</head>
+
+<body>
+<div class="card">
+
+<h1>分割返済シミュレーター</h1>
+
+<label>借入金額（円）</label>
+<input type="number" id="amount" placeholder="例：100000">
+
+<label>分割回数</label>
+<select id="installments">
+  <option value="1">翌月一括（手数料1%）</option>
+  <option value="3">3回払い（手数料6%）</option>
+  <option value="6">6回払い（手数料8%）</option>
+  <option value="10">10回払い（手数料10%）</option>
+  <option value="18">18回払い（手数料11%）</option>
+</select>
+
+<button onclick="calc()">計算する</button>
+
+<div class="result" id="result" style="display:none;"></div>
+
+<div class="note">
+※ 翌月25日より先に全額一括返済する場合、手数料はかかりません
+</div>
+
+</div>
+
+<script>
+function calc() {
+  const amount = Number(document.getElementById("amount").value);
+  const n = Number(document.getElementById("installments").value);
+
+  if (amount <= 0) {
+    alert("金額を入力してください");
+    return;
+  }
+
+  const rates = {
+    1: 0.01,
+    3: 0.06,
+    6: 0.08,
+    10: 0.10,
+    18: 0.11
+  };
+
+  const fee = amount * rates[n];
+  const total = amount + fee;
+  const monthly = Math.ceil(total / n);
+
+  const result = document.getElementById("result");
+  result.style.display = "block";
+ const label = (n === 1) ? "翌月の返済額" : "月々の返済額";
+
+result.innerHTML =
+  `手数料：${fee.toLocaleString()} 円<br>` +
+  `総返済額：${total.toLocaleString()} 円<br>` +
+  `${label}：${monthly.toLocaleString()} 円`;
+
+}
+</script>
+
+</body>
+</html>
